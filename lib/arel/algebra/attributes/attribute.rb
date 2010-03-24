@@ -110,8 +110,16 @@ module Arel
         Predicates::Match.new(self, regexp)
       end
 
+      def notmatches(regexp)
+        Predicates::NotMatch.new(self, regexp)
+      end
+      
       def in(array)
         Predicates::In.new(self, array)
+      end
+      
+      def notin(array)
+        Predicates::NotIn.new(self, array)
       end
     end
     include Predications
