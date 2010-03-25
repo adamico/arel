@@ -11,13 +11,20 @@ module Arel
     end
 
     class Binary < Predicate
-      attributes :operand1, :operand2
-      deriving :initialize
+      attributes :operand1, :operand2, :compounds, :compound_with
+      def initialize(operand1, operand2, *args)
+        @operand1 = operand1
+        @operand2 = operand2
+        @compound_with = (args.last.is_a?(Hash) ? args.pop[:compound_with] : :or) || :or
+        @compounds = args
+      end
 
       def ==(other)
-        self.class === other          and
-        @operand1  ==  other.operand1 and
-        @operand2  ==  other.operand2
+        self.class === other               and
+        @operand1      ==  other.operand1  and
+        @operand2      ==  other.operand2  and
+        @compounds     ==  other.compounds and
+        @compound_with == other.compound_with
       end
 
       def bind(relation)
@@ -29,11 +36,13 @@ module Arel
       def ==(other)
         Equality === other and
           ((operand1 == other.operand1 and operand2 == other.operand2) or
-           (operand1 == other.operand2 and operand2 == other.operand1))
+           (operand1 == other.operand2 and operand2 == other.operand1)) and
+          compounds == other.compounds and
+          compound_with == other.compound_with
       end
     end
 
-    class Not                   < Binary; end
+    class Not                   < Equality; end
     class GreaterThanOrEqualTo  < Binary; end
     class GreaterThan           < Binary; end
     class LessThanOrEqualTo     < Binary; end

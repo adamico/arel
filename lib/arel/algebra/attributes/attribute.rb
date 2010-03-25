@@ -82,44 +82,44 @@ module Arel
     include Congruence
 
     module Predications
-      def eq(other)
-        Predicates::Equality.new(self, other)
+      def eq(other, *args)
+        Predicates::Equality.new(self, other, *args)
       end
 
-      def not(other)
-        Predicates::Not.new(self, other)
+      def not(other, *args)
+        Predicates::Not.new(self, other, *args)
       end
 
-      def lt(other)
-        Predicates::LessThan.new(self, other)
+      def lt(other, *args)
+        Predicates::LessThan.new(self, other, *args)
       end
 
-      def lteq(other)
-        Predicates::LessThanOrEqualTo.new(self, other)
+      def lteq(other, *args)
+        Predicates::LessThanOrEqualTo.new(self, other, *args)
       end
 
-      def gt(other)
-        Predicates::GreaterThan.new(self, other)
+      def gt(other, *args)
+        Predicates::GreaterThan.new(self, other, *args)
       end
 
-      def gteq(other)
-        Predicates::GreaterThanOrEqualTo.new(self, other)
+      def gteq(other, *args)
+        Predicates::GreaterThanOrEqualTo.new(self, other, *args)
       end
 
-      def matches(regexp)
-        Predicates::Match.new(self, regexp)
+      def matches(regexp, *args)
+        Predicates::Match.new(self, regexp, *args)
       end
 
-      def notmatches(regexp)
-        Predicates::NotMatch.new(self, regexp)
+      def notmatches(regexp, *args)
+        Predicates::NotMatch.new(self, regexp, *args)
       end
       
-      def in(array)
-        Predicates::In.new(self, array)
+      def in(array, *args)
+        Predicates::In.new(self, array, *args)
       end
       
-      def notin(array)
-        Predicates::NotIn.new(self, array)
+      def notin(array, *args)
+        Predicates::NotIn.new(self, array, *args)
       end
     end
     include Predications

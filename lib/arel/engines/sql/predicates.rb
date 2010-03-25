@@ -2,7 +2,13 @@ module Arel
   module Predicates
     class Binary < Predicate
       def to_sql(formatter = nil)
-        "#{operand1.to_sql} #{predicate_sql} #{operand1.format(operand2)}"
+        if compounds.blank?
+          "#{operand1.to_sql} #{predicate_sql} #{operand1.format(operand2)}"
+        else
+          compounds.inject(self) do |compounded, value|
+            compounded.send(compound_with, self.class.new(operand1, compounds.shift))
+          end.to_sql
+        end
       end
     end
 
@@ -26,7 +32,7 @@ module Arel
       end
     end
 
-    class Not < Binary
+    class Not < Equality
       def predicate_sql; '!=' end
     end
 
