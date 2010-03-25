@@ -26,7 +26,7 @@ module Arel
       end
     end
 
-    class Not < Binary
+    class Not < Equality
       def predicate_sql; '!=' end
     end
 
