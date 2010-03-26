@@ -22,9 +22,11 @@ module Arel
     
     class GroupedPredicate < Grouped
       def to_sql(formatter = nil)
-        "(" + operands2.inject([]) do |predicates, operand|
-          predicates << operator.new(operand1, operand).to_sql
-        end.join(" #{predicate_sql} ") + ")"
+        "(" + 
+          operands2.inject([]) { |predicates, operand|
+            predicates << operator.new(operand1, operand).to_sql
+          }.join(" #{predicate_sql} ") +
+        ")"
       end
     end
     
