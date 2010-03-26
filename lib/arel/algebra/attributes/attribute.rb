@@ -22,29 +22,6 @@ module Arel
     def inspect
       "<Attribute #{name}>"
     end
-    
-    def self.predication(name, klass)
-      methods = {
-        :operator => "
-          def #{name}(other)
-            Predicates::#{klass}.new(self, other)
-          end
-        ",
-        :any => "
-          def #{name}_any(*others)
-            Predicates::Any.new(Predicates::#{klass}, self, *others)
-          end
-        ",
-        :all => "
-          def #{name}_all(*others)
-            Predicates::All.new(Predicates::#{klass}, self, *others)
-          end
-        "
-      }
-      [:operator, :any, :all].each do |method_name|
-        class_eval methods[method_name], __FILE__, __LINE__
-      end
-    end
 
     module Transformations
       def self.included(klass)
@@ -118,8 +95,31 @@ module Arel
         :notin => "NotIn"
       }
       
+      def self.predication(name, klass)
+        methods = {
+          :operator => "
+            def #{name}(other)
+              Predicates::#{klass}.new(self, other)
+            end
+          ",
+          :any => "
+            def #{name}_any(*others)
+              Predicates::Any.new(Predicates::#{klass}, self, *others)
+            end
+          ",
+          :all => "
+            def #{name}_all(*others)
+              Predicates::All.new(Predicates::#{klass}, self, *others)
+            end
+          "
+        }
+        [:operator, :any, :all].each do |method_name|
+          module_eval methods[method_name], __FILE__, __LINE__
+        end
+      end
+      
       methods.each_pair do |method_name, class_name|
-        Attribute.predication(method_name, class_name)
+        predication(method_name, class_name)
       end
     end
     include Predications
