@@ -19,6 +19,22 @@ module Arel
     class And < CompoundPredicate
       def predicate_sql; "AND" end
     end
+    
+    class GroupedPredicate < Grouped
+      def to_sql(formatter = nil)
+        "(" + operands2.inject([]) do |predicates, operand|
+          predicates << operator.new(operand1, operand).to_sql
+        end.join(" #{predicate_sql} ") + ")"
+      end
+    end
+    
+    class Any < GroupedPredicate
+      def predicate_sql; "OR" end
+    end
+    
+    class All < GroupedPredicate
+      def predicate_sql; "AND" end
+    end
 
     class Equality < Binary
       def predicate_sql

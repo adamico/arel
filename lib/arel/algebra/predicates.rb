@@ -9,6 +9,16 @@ module Arel
         And.new(self, other_predicate)
       end
     end
+    
+    class Grouped < Predicate
+      attr_reader :operator, :operand1, :operands2
+      
+      def initialize(operator, operand1, *operands2)
+        @operator = operator
+        @operand1 = operand1
+        @operands2 = operands2
+      end
+    end
 
     class Binary < Predicate
       attributes :operand1, :operand2
